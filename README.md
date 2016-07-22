@@ -20,7 +20,7 @@ Example:
 
 ./TransactionsCalci.sh -i http://127.0.0.1:5000 -b 1 -f
 
- -i	 - IP along with HOST (Default value http://127.0.0.1:5000 )
+ -i	    - IP along with HOST (Default value http://127.0.0.1:5000 )
  -b 	- Block number from where to begin (Default value 1)
  -f 	- To enable logging (Write Block info to blocks.txt file)
 ```

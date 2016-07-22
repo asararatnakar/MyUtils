@@ -8,7 +8,9 @@ This progran is intended to determine number of transactions executed on fabric
 
 use curl command to download this file
 
-```curl -L https://raw.githubusercontent.com/ratnakar-asara/MyUtils/master/TransactionsCalci.sh -o TransactionsCalci.sh```
+```
+curl -L https://raw.githubusercontent.com/ratnakar-asara/MyUtils/master/TransactionsCalci.sh -o TransactionsCalci.sh
+```
 
 __USAGE__ :
 ```

@@ -4,7 +4,9 @@ Started writing some Utility programs
 
 **TransactionsCalci.sh**  (This is initial version, more to come)
 
-This progran is intended to determine number of transactions executed on fabric
+This program is intended to determine number of transactions executed on fabric based on block number provided.
+Please note if -b option is not provided it defaults to block 1.
+
 
 use curl command to download this file
 
@@ -18,7 +20,7 @@ __USAGE__ :
 ```
 TransactionsCalci.sh [OPTIONS]
 
-./TransactionsCalci.sh -i http://IP:PORT -b <BLOCK_NUMBER_FROM> -f
+./TransactionsCalci.sh -i http://IP:PORT -b <BLOCK_NUMBER_BEGINS_FROM> -f
 
 OPTIONS:
  -i	    - IP along with HOST (Default value http://127.0.0.1:5000 )

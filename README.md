@@ -11,10 +11,14 @@ use curl command to download this file
 
 __USAGE__ :
 ```
-TransactionsCalci.sh -i http://IP:PORT -b <BLOCK_NUMBER_FROM> -e
+TransactionsCalci.sh -i http://IP:PORT -b <BLOCK_NUMBER_FROM> -f
+
 Example: 
 
-./TransactionsCalci.sh -i http://127.0.0.1:5000 -b 2 -e
+./TransactionsCalci.sh -i http://127.0.0.1:5000 -b 1 -f
 
-here flag e is to enable logging
+ -i	- IP along with HOST (Default value http://127.0.0.1:5000 )
+ -b 	- Block number from where to begin (Default value 1)
+ -f 	- To enable logging (Write Block info to blocks.txt file)
 ```
+

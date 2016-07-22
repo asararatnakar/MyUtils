@@ -32,4 +32,5 @@ OPTIONS:
 ```
 
 **NOTE**
+- As a prerequisite, you need to install Jq - https://stedolan.github.io/jq/download/
 - This is just initial version, Yet to add more funcationality ex: time calculations etc.,(suggestions welcome)

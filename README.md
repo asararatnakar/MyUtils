@@ -5,8 +5,7 @@ Started writing some Utility programs
 **TransactionsCalci.sh**  (This is initial version, more to come)
 
 This program is intended to determine number of transactions executed on fabric based on start and end block numbers provided.
-Please note if -s (Starting block number) option is not provided it defaults to block 1, similarly if -e (End block number) option is not provided it defaults to chain height
-
+Please note if -s (Starting block number) option is not provided it defaults to block 1, similarly if -e (End block number) option is not provided it defaults to chain height. This script also caluclates the time taken to execute the number of transactions
 
 use curl command to download this file
 
@@ -20,9 +19,10 @@ __USAGE__ :
 ```
 TransactionsCalci.sh [OPTIONS]
 
-./TransactionsCalci.sh -i http://IP:PORT -b <BLOCK_NUMBER_BEGINS_FROM> -f
+./TransactionsCalci.sh -i http://IP:PORT -s <START_BLOCK_NUM> -e <END_BLOCK_NUM> -l
 
 OPTIONS:
+ -h/?   - Prints usage message
  -i	    - IP along with HOST (Default value http://127.0.0.1:5000 )
  -s 	- Block number from where to begin (Default value 1)
  -e 	- Last Block number (Default value chain height)

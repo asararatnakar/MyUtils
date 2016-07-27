@@ -4,8 +4,8 @@ Started writing some Utility programs
 
 **TransactionsCalci.sh**  (This is initial version, more to come)
 
-This program is intended to determine number of transactions executed on fabric based on block number provided.
-Please note if -b option is not provided it defaults to block 1.
+This program is intended to determine number of transactions executed on fabric based on start and end block numbers provided.
+Please note if -s (Starting block number) option is not provided it defaults to block 1, similarly if -e (End block number) option is not provided it defaults to chain height
 
 
 use curl command to download this file
@@ -24,12 +24,13 @@ TransactionsCalci.sh [OPTIONS]
 
 OPTIONS:
  -i	    - IP along with HOST (Default value http://127.0.0.1:5000 )
- -b 	- Block number from where to begin (Default value 1)
- -f 	- To enable logging (Write Block info to blocks.txt file)
+ -s 	- Block number from where to begin (Default value 1)
+ -e 	- Last Block number (Default value chain height)
+ -l 	- To enable logging (Write Block info to blocks.txt file)
  
  Example: 
 
-./TransactionsCalci.sh -i http://127.0.0.1:5000 -b 1 -f
+./TransactionsCalci.sh -i http://127.0.0.1:5000 -s 1 -e 10 -l
 
 ```
 

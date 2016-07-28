@@ -4,8 +4,8 @@ Started writing some Utility programs
 
 **TransactionsCalci.sh**  (This is initial version, more to come)
 
-This program is intended to determine number of transactions executed on fabric based on start and end block numbers provided.
-Please note if -s (Starting block number) option is not provided it defaults to block 1, similarly if -e (End block number) option is not provided it defaults to chain height. This script also caluclates the time taken to execute the number of transactions
+This program is intended to determine number of transactions executed on fabric based on optional start and end block numbers provided (else it will)
+Please note if -s (Starting block number) option is not provided it defaults to block 1, similarly if -e (End block number) option is not provided it defaults to chain height. Also caluclates the time taken to execute the number of transactions
 
 use curl command to download this file
 
@@ -36,4 +36,4 @@ OPTIONS:
 
 **NOTE**
 - As a prerequisite, you need to install Jq - https://stedolan.github.io/jq/download/
-- This is just initial version, Yet to add more funcationality ex: time calculations etc.,(suggestions welcome)
+- This is just initial version, Yet to add more funcationality (suggestions welcome)

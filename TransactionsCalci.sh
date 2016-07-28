@@ -20,6 +20,7 @@
 #
 # USAGE:
 #	TransactionsCalci.sh [OPTIONS]
+#
 # OPTIONS:
 #	-h/? - Print a usage message
 #	-i   - IP and HOST
@@ -28,9 +29,10 @@
 #       -l   - Enable Block info logging to file
 #
 # SAMPLE :
-#	./TransactionsCalci.sh -i http://127.0.0.1:5000 -s 2 -l
-#       Transaction infomration is calculated from block 2 and block
-# info will be saved to blocks.txt
+#	./TransactionsCalci.sh -i http://127.0.0.1:5000 -s 2 e 10 -l
+#
+#       Transaction infomration is calculated between starting block 2 and
+# ending block 10, blockinfo will be saved to blocks.txt
 # ------------------------------------------------------------------
 
 function usage(){
@@ -70,14 +72,34 @@ errTrxn=0
 Trxn=0
 
 echo
+
+##TODO: recheck if there is any better approach
+function getStartTimeStamp(){
+	if test $START_BLOCK_NUM -le $END_BLOCK_NUM ; then
+		if test "$START_BLOCK_NUM" = "2" -o "$START_TIME" = "null"; then
+			START_BLOCK_NUM=` expr $START_BLOCK_NUM + 1 `
+			#Calculate starting block
+			if test "$IS_SECURE" = "https" ; then
+				curl -k $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
+			else
+				curl -s $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
+			fi
+			START_TIME=$(cat timeCal.json | jq '.["nonHashData"]["localLedgerCommitTimestamp"]["seconds"]')
+			if test "$START_TIME" = "null" ; then
+				getStartTimeStamp
+			fi
+		fi
+	fi
+}
+
 IS_SECURE=${IP_PORT:0: 5}
-if [ "$IS_SECURE" = "https" ]; then
+if test "$IS_SECURE" = "https" ; then
     TOTAL_TRXNS=$(curl -k $IP_PORT/chain | jq '.height')
 else
     TOTAL_TRXNS=$(curl -s $IP_PORT/chain | jq '.height')
 fi
 
-if [ -z $TOTAL_TRXNS ]; then
+if test -z $TOTAL_TRXNS ; then
 	echo
 	echo "Looks like IP and/or PORT are Invalid or May be Network is bad ??"
 	echo
@@ -97,21 +119,31 @@ if test "$TOTAL_TRXNS" -le 1 ; then
 	exit 1
 fi
 
-if [ -z $END_BLOCK_NUM ]; then
+if test -z $END_BLOCK_NUM ; then
         #comeup with a better approach?
 	END_BLOCK_NUM=$TOTAL_TRXNS
 else
-	echo "End Block number is $END_BLOCK_NUM"
+	echo #echo "End Block number is $END_BLOCK_NUM"
+fi
+if test $START_BLOCK_NUM -lt 1 -o $START_BLOCK_NUM -gt $TOTAL_TRXNS ; then
+	echo "Start block (-s) argument is Invalid changing it to default value 1 "
+	echo
+	START_BLOCK_NUM=1
+fi
+if test $END_BLOCK_NUM -le 0 -o $END_BLOCK_NUM -gt $TOTAL_TRXNS ; then
+	echo "End block (-e) argument is Invalid changing it to chain height $TOTAL_TRXNS "
+	echo
+	END_BLOCK_NUM=$TOTAL_TRXNS
 fi
 
-echo "--- Total Blocks to be processed ` expr $TOTAL_TRXNS - 1 ` (Ignore Firt Block Genesis) ---"
+echo "--- Total Blocks to be processed ` expr $END_BLOCK_NUM - $START_BLOCK_NUM ` (Ignore Firt Block Genesis)  ---"
 
-if [ "$ENABLE_LOG" == "Y" ] ; then
+if test "$ENABLE_LOG" == "Y" ; then
 	echo "############ Begin Writing blocks ############" > blocks.txt
 fi
 
 #Calculate starting block
-if [ "$IS_SECURE" = "https" ]; then
+if test "$IS_SECURE" = "https" ; then
 	curl -k $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
 else
 	curl -s $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
@@ -119,17 +151,19 @@ fi
 
 START_TIME=$(cat timeCal.json | jq '.["nonHashData"]["localLedgerCommitTimestamp"]["seconds"]')
 
+
+
 for (( i=$START_BLOCK_NUM; $i<$END_BLOCK_NUM; i++ ))
 do
 	#This check is required
-	if [ "$IS_SECURE" = "https" ]; then
+	if test "$IS_SECURE" = "https" ; then
 		curl -k $IP_PORT/chain/blocks/$i | jq '.' > data.json
 	else
 		curl -s $IP_PORT/chain/blocks/$i | jq '.' > data.json
 	fi
 
 	#Write logs to blocks.txt if block logging enabled
-	if [ "$ENABLE_LOG" == "Y" ] ; then
+	if test "$ENABLE_LOG" == "Y" ; then
 		echo "---------------- Block-$i ----------------" >> blocks.txt
 		cat data.json >> blocks.txt
 		echo "---------------- Block-$i ----------------"  >> blocks.txt
@@ -150,45 +184,48 @@ do
 done
 
 #Calculate end block
-if [ "$ENABLE_LOG" == "Y" ] ; then
+if test "$ENABLE_LOG" == "Y" ; then
 	echo "############ End Writing blocks ############" >> blocks.txt
 fi
 
+getStartTimeStamp
+
 #Calculate starting block
-if [ "$IS_SECURE" = "https" ]; then
+if test "$IS_SECURE" = "https" ; then
 	curl -k $IP_PORT/chain/blocks/` expr $END_BLOCK_NUM - 1 ` | jq '.' > timeCal.json
 else
 	curl -s $IP_PORT/chain/blocks/` expr $END_BLOCK_NUM - 1 ` | jq '.' > timeCal.json
 fi
 
+
 END_TIME=$(cat timeCal.json | jq '.["nonHashData"]["localLedgerCommitTimestamp"]["seconds"]')
 
+##TODO: recheck if there is any better approach
+if test "$START_TIME" = "null" -o "$END_TIME" = "null" ; then
+	echo "############ looks like, No Invoke transactions, Exiting ... ##############"
+	echo
+	exit 1;
+fi
+
 #Temporary files cleanup
-if [ -f ./data.json ]; then
+if test -f ./data.json ; then
     rm ./data.json
 fi
 
-if [ -f ./timeCal.json ]; then
+if test -f ./timeCal.json ; then
     rm ./timeCal.json
-fi
-
-if test "$START_TIME" == "null" ; then
-	START_TIME=0
-fi
-if test "$END_TIME" == "null" ; then
-	END_TIME=0
 fi
 
 echo
 echo "----------- Chaincode Deployment Transactions: $deployTrxn"
 echo "----------- Failed Transactions: $errTrxn"
-echo "----------- Successful Transactions (Exclude Deploy Trxn) : " ` expr $Trxn - $errTrxn`
+echo "----------- Successful Transactions (Exclude Deploy Trxn if any) : " ` expr $Trxn - $errTrxn `
 echo
 echo
-echo "************ Total Transactions : " ` expr $deployTrxn + $Trxn + $errTrxn` " **********"
+echo "************ Total Transactions : " ` expr $deployTrxn + $Trxn + $errTrxn ` " **********"
 echo
 if test -n "$START_TIME" -a -n "$END_TIME" ; then
-	echo "------------ Total execution time ` expr $END_TIME - $START_TIME ` in ms"
+	echo "------------ Total execution time ` expr $END_TIME - $START_TIME ` secs"
 fi
 echo
 

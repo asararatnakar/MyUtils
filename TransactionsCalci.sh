@@ -70,6 +70,7 @@ echo "##################### Letz begin the fun  #######################"
 deployTrxn=0
 errTrxn=0
 Trxn=0
+TOTAL_TRXNS=$(curl -ks $IP_PORT/chain | jq '.height')
 
 echo
 
@@ -79,11 +80,7 @@ function getStartTimeStamp(){
 		if test "$START_BLOCK_NUM" = "2" -o "$START_TIME" = "null"; then
 			START_BLOCK_NUM=` expr $START_BLOCK_NUM + 1 `
 			#Calculate starting block
-			if test "$IS_SECURE" = "https" ; then
-				curl -k $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
-			else
-				curl -s $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
-			fi
+			curl -ks $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
 			START_TIME=$(cat timeCal.json | jq '.["nonHashData"]["localLedgerCommitTimestamp"]["seconds"]')
 			if test "$START_TIME" = "null" ; then
 				getStartTimeStamp
@@ -91,13 +88,6 @@ function getStartTimeStamp(){
 		fi
 	fi
 }
-
-IS_SECURE=${IP_PORT:0: 5}
-if test "$IS_SECURE" = "https" ; then
-    TOTAL_TRXNS=$(curl -k $IP_PORT/chain | jq '.height')
-else
-    TOTAL_TRXNS=$(curl -s $IP_PORT/chain | jq '.height')
-fi
 
 if test -z $TOTAL_TRXNS ; then
 	echo
@@ -143,11 +133,7 @@ if test "$ENABLE_LOG" == "Y" ; then
 fi
 
 #Calculate starting block
-if test "$IS_SECURE" = "https" ; then
-	curl -k $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
-else
-	curl -s $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
-fi
+curl -ks $IP_PORT/chain/blocks/$START_BLOCK_NUM | jq '.' > timeCal.json
 
 START_TIME=$(cat timeCal.json | jq '.["nonHashData"]["localLedgerCommitTimestamp"]["seconds"]')
 
@@ -156,11 +142,7 @@ START_TIME=$(cat timeCal.json | jq '.["nonHashData"]["localLedgerCommitTimestamp
 for (( i=$START_BLOCK_NUM; $i<$END_BLOCK_NUM; i++ ))
 do
 	#This check is required
-	if test "$IS_SECURE" = "https" ; then
-		curl -k $IP_PORT/chain/blocks/$i | jq '.' > data.json
-	else
-		curl -s $IP_PORT/chain/blocks/$i | jq '.' > data.json
-	fi
+	curl -ks $IP_PORT/chain/blocks/$i | jq '.' > data.json
 
 	#Write logs to blocks.txt if block logging enabled
 	if test "$ENABLE_LOG" == "Y" ; then
@@ -191,11 +173,7 @@ fi
 getStartTimeStamp
 
 #Calculate starting block
-if test "$IS_SECURE" = "https" ; then
-	curl -k $IP_PORT/chain/blocks/` expr $END_BLOCK_NUM - 1 ` | jq '.' > timeCal.json
-else
-	curl -s $IP_PORT/chain/blocks/` expr $END_BLOCK_NUM - 1 ` | jq '.' > timeCal.json
-fi
+curl -ks $IP_PORT/chain/blocks/` expr $END_BLOCK_NUM - 1 ` | jq '.' > timeCal.json
 
 
 END_TIME=$(cat timeCal.json | jq '.["nonHashData"]["localLedgerCommitTimestamp"]["seconds"]')

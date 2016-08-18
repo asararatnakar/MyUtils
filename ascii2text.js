@@ -18,5 +18,5 @@ for (var i=0;i<res.length;i++) {
   var temp = String.fromCharCode(parseInt(res[i]));
   result += temp;
 }
-console.log("Text now is : " +result+"\n");
+console.log("\nText now is : " +result+"\n");
 

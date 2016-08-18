@@ -2,7 +2,7 @@
 
 Started writing some Utility programs
 
-**TransactionsCalci.sh**  (This is initial version, more to come)
+##TransactionsCalci.sh
 
 This program is intended to determine number of transactions executed on fabric, based on optional flags start and end block numbers provided.Please note if -s (Starting block number) option is not provided it defaults to block 1, similarly if -e (End block number) option is not provided it defaults to chain height. Also caluclates the time taken to execute the number of transactions
 
@@ -39,3 +39,16 @@ OPTIONS:
 
 Issue: 
 - Cuurently deploy is not cpaturing the timestamp information in Block, hence script considers time stamp from first transaction after deploy trxn (i.e, Invokes)
+
+#ascii2text.js
+
+Just a simple script to convert Ascii to charecters
+
+**USAGE**: `node ascii2text.js < value in decima>`
+
+ex:
+
+`node ascii2text.js "65 83 67 73 73"`
+
+**NOTE**
+- As a prerequisite, you need to install **NodeJs**

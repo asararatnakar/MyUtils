@@ -1,6 +1,6 @@
 # MyUtils
 
-Started writing some Utility programs
+Some basic utility scripts/programs
 
 ##1. TransactionsCalci.sh
 
@@ -33,14 +33,42 @@ OPTIONS:
 
 ```
 
+#2. QuickTrxCounter.sh
+
+This is a pretty basic version of the above script `TransactionsCalci.sh`.
+It just gets the total transactions executed on a Blockchain.
+All you need to do is submit the Ip/Port and as a resulult you get Total transactions executed
+(Includes both Successful and failure transactions)
+
+```
+curl -L https://raw.githubusercontent.com/ratnakar-asara/MyUtils/master/QuickTrxCounter.sh -o QuickTrxCounter.sh
+
+chmod +x QuickTrxCounter.sh
+```
+
+__USAGE__ :
+```
+QuickTrxCounter.sh [OPTIONS]
+
+./QuickTrxCounter.sh http://IP:PORT
+
+OPTIONS:
+-http://127.0.0.1:5000 - Provide the http://IP:HOST
+
+ Example: 
+
+./QuickTrxCounter.sh http://127.0.0.1:5000
+
+```
+
 **NOTE**
-- As a prerequisite, you need to install Jq - https://stedolan.github.io/jq/download/
-- This is just initial version, Yet to add more funcationality (suggestions welcome)
+- As a prerequisite, you need to install **JQ** - https://stedolan.github.io/jq/download/
+- These are just initial versions, Yet to add more funcationality (Please suggest for imporvements)
 
 Issue: 
 - Cuurently deploy is not cpaturing the timestamp information in Block, hence script considers time stamp from first transaction after deploy trxn (i.e, Invokes)
 
-#2. ascii2text.js
+#3. ascii2text.js
 
 Just a simple script to convert Ascii to charecters
 

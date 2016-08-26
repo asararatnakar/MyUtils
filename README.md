@@ -68,7 +68,40 @@ OPTIONS:
 Issue: 
 - Cuurently deploy is not cpaturing the timestamp information in Block, hence script considers time stamp from first transaction after deploy trxn (i.e, Invokes)
 
-#3. ascii2text.js
+#3. CheckHeight.sh
+
+This script is limted to get you the heights of a 4 peer network (Network created from Docker composer or Bluemix Starter/HSBN network type)
+compares the heights and tell if all the peers are in sync or not
+```
+curl -L https://raw.githubusercontent.com/ratnakar-asara/MyUtils/master/CheckHeight.sh -o CheckHeight.sh
+
+chmod +x CheckHeight.sh
+```
+
+__USAGE__ :
+```
+QuickTrxCounter.sh [OPTIONS]
+
+ SAMPLE 1 :
+	./ChainHeight.sh
+
+       No IP provided hence defaults to http://127.0.0.1:5000 and get height of a single peer, I assume you are outside vagrant, while peers are running inside vagrant)
+
+ SAMPLE 2 :
+	./ChainHeight.sh http://172.17.0.3:5000
+
+       I assume, this IP is used when script is running inside Vagrant env. Get heights of 4 peers and compare their block heights to check if they are in sync or not
+
+ SAMPLE 3 :
+	./ChainHeight.sh https://e405f46f-dfaf-abcd-8995-6dd4a6e2d915_vp0-api.zone.blockchain.ibm.com/
+
+       I assume this is a 4 peer network (Bluemix Starter/HSBN) and gets you the heights of the peers and compare their block heights to check if they in sync or not.
+
+```
+
+ TBD: Blocks height alone might not be sufficient for comparision, Should we check hashcodes aswell ?
+
+#4. ascii2text.js
 
 Just a simple script to convert Ascii to charecters
 

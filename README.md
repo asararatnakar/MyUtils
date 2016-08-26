@@ -70,8 +70,7 @@ Issue:
 
 #3. CheckHeight.sh
 
-This script is limted to get you the heights of a 4 peer network (Network created from Docker composer or Bluemix Starter/HSBN network type)
-compares the heights and tell if all the peers are in sync or not
+This script is limted to get you the heights of a 4 peer network (Network created from Docker composer or Bluemix Starter/HSBN network type) compares the heights and checks if all peers are in sync or not
 ```
 curl -L https://raw.githubusercontent.com/ratnakar-asara/MyUtils/master/CheckHeight.sh -o CheckHeight.sh
 
@@ -99,7 +98,10 @@ QuickTrxCounter.sh [OPTIONS]
 
 ```
 
- **TBD** : __Blocks height alone might not be sufficient for comparision, Should we check hashcodes aswell__
+ **TBD** :
+ 
+ 	* Blocks height alone might not be sufficient for comparision, Should we check hashcodes aswell
+ 	* Make sure if PORTs are updated in script when switched to Gerrit based peers
 
 #4. ascii2text.js
 

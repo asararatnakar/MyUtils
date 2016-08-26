@@ -99,7 +99,7 @@ QuickTrxCounter.sh [OPTIONS]
 
 ```
 
- TBD: Blocks height alone might not be sufficient for comparision, Should we check hashcodes aswell ?
+ **TBD** : __Blocks height alone might not be sufficient for comparision, Should we check hashcodes aswell__
 
 #4. ascii2text.js
 

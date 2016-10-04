@@ -29,7 +29,7 @@
 #       -l   - Enable Block info logging to file
 #
 # SAMPLE :
-#	./TransactionsCalci.sh -i http://127.0.0.1:5000 -s 2 e 10 -l
+#	./TransactionsCalci.sh -i http://127.0.0.1:7050 -s 2 e 10 -l
 #
 #       Transaction infomration is calculated between starting block 2 and
 # ending block 10, blockinfo will be saved to blocks.txt
@@ -38,7 +38,7 @@
 function usage(){
 	## Enhance this section
         echo "USAGE : TransactionsCalci.sh -i http://IP:PORT -s <START_BLOCK_NUM> -e <END_BLOCK_NUM> -l"
-	echo "ex: ./TransactionsCalci.sh -i http://127.0.0.1:5000 -b 2 -l"
+	echo "ex: ./TransactionsCalci.sh -i http://127.0.0.1:7050 -b 2 -l"
 }
 
 while getopts "\?hli:s:e:" opt; do
@@ -60,7 +60,7 @@ done
 echo
 echo "##################### Letz begin the fun  #######################"
 
-: ${IP_PORT:="http://127.0.0.1:5000"} #Default IP set to 127.0.0.1 and Port to 5000
+: ${IP_PORT:="http://127.0.0.1:7050"} #Default IP set to 127.0.0.1 and Port to 7050
 : ${START_BLOCK_NUM:=1} #Defaults to DeployTx or any First block
 : ${ENABLE_LOG:="N"} #Default logging disabled
 : ${START_TIME:="0"} #Default Start time stamp
@@ -157,11 +157,11 @@ do
 	deployTrxn=` expr $deployTrxn + $counter `
 
 	#Calculate Error transactions
-	counter=$(cat data.json | jq '.["nonHashData"]["transactionResults"]' | grep errorCode | wc -l)
+	counter=$(cat data.json | jq '.["transactions"]' | grep errorCode | wc -l)
 	errTrxn=` expr $errTrxn + $counter `
 
 	#Calculate overall transactions
-	counter=$(cat data.json | jq '.["nonHashData"]["transactionResults"]' | grep uuid | wc -l)
+	counter=$(cat data.json | jq '.["transactions"]' | grep txid | wc -l)
 	Trxn=` expr $Trxn + $counter `
 done
 

@@ -20,17 +20,17 @@
 #	QuickTrxCalci.sh [OPTIONS]
 #
 # OPTIONS:
-#       -http://127.0.0.1:5000 - Provide the http://IP:HOST
+#       -http://127.0.0.1:7050 - Provide the http://IP:HOST
 #
 # SAMPLE :l
-#	./QuickTrxCalci.sh http://127.0.0.1:5000
+#	./QuickTrxCalci.sh http://127.0.0.1:7050
 #
 #       Gives output with total transactions (includes both successful and 
-# failure transaction) executed on 127.0.0.1 (localhost) with Port 5000
+# failure transaction) executed on 127.0.0.1 (localhost) with Port 7050
 # ------------------------------------------------------------------
 
 IP_PORT=$1
-: ${IP_PORT:="http://127.0.0.1:5000"}
+: ${IP_PORT:="http://127.0.0.1:7050"}
 
 TOTAL_BLOCKS=$(curl -ks $IP_PORT/chain | jq '.height')
 
@@ -57,7 +57,7 @@ fi
 TOTAL_TXN=0
 for (( i=1; $i<$TOTAL_BLOCKS; i++ ))
 do
- TXN_COUNT=$(curl -ks $IP_PORT/chain/blocks/$i | jq "." |grep uuid | wc -l )
+ TXN_COUNT=$(curl -ks $IP_PORT/chain/blocks/$i | jq "." | grep txid | wc -l )
  ##TODO: Redirect info for later postmartem purposes
  #curl -ks $IP_PORT/chain/blocks/$i | jq "."
  TOTAL_TXN=` expr $TOTAL_TXN + $TXN_COUNT`

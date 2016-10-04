@@ -6,7 +6,7 @@
 #
 # AUTHOR: Ratnakar Asara
 #
-# VERSION: 0.1
+# VERSION: 0.2
 #
 # DESCRIPTION:
 #          The purpose of this script is to get the height of the Blockchain
@@ -19,17 +19,17 @@
 #	CheckHeight.sh [OPTIONS]
 #
 # OPTIONS:
-#       -http://172.17.0.3:5000 - Provide the format http://IP:HOST
+#       -http://172.17.0.3:7050 - Provide the format http://IP:HOST
 #
 # SAMPLE 1 :
 #	./ChainHeight.sh
 #
-#       No IP provided hence defaults to IP http://127.0.0.1:5000 and get
+#       No IP provided hence defaults to IP http://127.0.0.1:7050 and get
 # height of a single peer (Generally used outside vagrant, when peers are 
 # running inside vagrant)
 #
 # SAMPLE 2 :
-#	./ChainHeight.sh http://172.17.0.3:5000
+#	./ChainHeight.sh http://172.17.0.3:7050
 #
 #       I assume, this IP is used when script is running inside Vagrant env.
 # Checks heights of 4 peers and compare their block heights to check if they in
@@ -46,12 +46,12 @@
 
 #TODO: Make sure you have the right ports
 
-: ${IP_PORT:="http://127.0.0.1:5000"}
+: ${IP_PORT:="http://127.0.0.1:7050"}
 
-: ${DOCKER_IP1:="http://172.17.0.3:5000"}
-: ${DOCKER_IP2:="http://172.17.0.4:5000"}
-: ${DOCKER_IP3:="http://172.17.0.5:5000"}
-: ${DOCKER_IP4:="http://172.17.0.6:5000"}
+: ${DOCKER_IP1:="http://172.17.0.3:7050"}
+: ${DOCKER_IP2:="http://172.17.0.4:7050"}
+: ${DOCKER_IP3:="http://172.17.0.5:7050"}
+: ${DOCKER_IP4:="http://172.17.0.6:7050"}
 
 if [ "$#" -eq 1 ]; then
   IP_PORT=$1

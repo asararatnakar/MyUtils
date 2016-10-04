@@ -67,9 +67,9 @@ echo "##################### Letz begin the fun  #######################"
 : ${END_TIME:="0"} #Default End time stamp
 
 #Set default values to 0
-deployTrxn=0
-errTrxn=0
-Trxn=0
+DEPLOY_TX_COUNTER=0
+ERR_TX_COUNTER=0
+TX_COUNTER=0
 TOTAL_TRXNS=$(curl -ks $IP_PORT/chain | jq '.height')
 
 echo
@@ -153,16 +153,27 @@ do
 	fi
 
 	#Calculate Deploy transactions
-	counter=$(cat data.json | grep "ChaincodeDeploymentSpec" | wc -l)
-	deployTrxn=` expr $deployTrxn + $counter `
+	COUNTER=$(cat data.json | grep "ChaincodeDeploymentSpec" | wc -l)
+	DEPLOY_TX_COUNTER=` expr $DEPLOY_TX_COUNTER + $COUNTER `
 
 	#Calculate Error transactions
-	counter=$(cat data.json | jq '.["transactions"]' | grep errorCode | wc -l)
-	errTrxn=` expr $errTrxn + $counter `
+	#COUNTER=$(cat data.json | jq '.["transactions"]' | grep errorCode | wc -l)
 
 	#Calculate overall transactions
-	counter=$(cat data.json | jq '.["transactions"]' | grep txid | wc -l)
-	Trxn=` expr $Trxn + $counter `
+	COUNTER=$(cat data.json | jq '.["transactions"]' | grep txid | wc -l)
+        ###TODO: Can we do better here ? How do we get the failed trxns
+	if [ "$COUNTER" -eq "0" ]; then
+	        COUNTER=$(cat data.json | jq '.["nonHashData"]' | grep "{}" | wc -l)
+		ERR_TX_COUNTER=` expr $ERR_TX_COUNTER + $COUNTER `
+	else
+                BLOCK_TXN=$(cat data.json | jq '.["nonHashData"]' | grep "{}" | wc -l)
+		if [ "$COUNTER" -ne "$BLOCK_TXN" ]; then
+                        FAILED_TXN=` expr $BLOCK_TXN - $COUNTER`
+		        ERR_TX_COUNTER=` expr $ERR_TX_COUNTER + $FAILED_TXN `
+			TX_COUNTER=` expr $TX_COUNTER + $COUNTER `
+		fi
+
+	fi
 done
 
 #Calculate end block
@@ -194,13 +205,15 @@ if test -f ./timeCal.json ; then
     rm ./timeCal.json
 fi
 
+TOTAL_TRXNS=` expr $DEPLOY_TX_COUNTER + $TX_COUNTER + $ERR_TX_COUNTER `
 echo
-echo "----------- Chaincode Deployment Transactions: $deployTrxn"
-echo "----------- Failed Transactions: $errTrxn"
-echo "----------- Successful Transactions (Exclude Deploy Trxn if any) : " ` expr $Trxn - $errTrxn `
+echo "----------- Chaincode Deployment Transactions: $DEPLOY_TX_COUNTER"
+echo "----------- Failed Transactions: $ERR_TX_COUNTER"
+#TODO: This is still not right way to do ?
+echo "----------- Successful Transactions (Exclude Deploy TX_COUNTER if any) : " ` expr $TOTAL_TRXNS - $ERR_TX_COUNTER`
 echo
 echo
-echo "************ Total Transactions : " ` expr $deployTrxn + $Trxn + $errTrxn ` " **********"
+echo "************ Total Transactions : " ` expr $DEPLOY_TX_COUNTER + $TX_COUNTER + $ERR_TX_COUNTER ` " **********"
 echo
 if test -n "$START_TIME" -a -n "$END_TIME" ; then
 	echo "------------ Total execution time ` expr $END_TIME - $START_TIME ` secs"

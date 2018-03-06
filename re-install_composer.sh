@@ -2,7 +2,7 @@
 
 #uninstall all
 declare -a fabcomposer=("composer-cli" "composer-rest-server" "generator-hyperledger-composer" "composer-playground")
-declare -a fabcomposernext=("composer-cli@next" "composer-rest-server@next" "generator-hyperledger-composer@next" "composer-playground@next")
+declare -a fabcomposernext=("composer-cli@0.17.6" "composer-rest-server@0.17.6" "generator-hyperledger-composer@0.17.6" "composer-playground@0.17.6")
 
 ## loop through fabcomposer array to uninstall all composer node modules
 function uninstallComposer(){

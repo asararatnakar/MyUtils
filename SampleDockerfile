@@ -1,0 +1,31 @@
+##Pull base image.
+FROM ubuntu:16.04
+
+RUN apt update && apt install -y \
+       git \
+       curl \
+			 python-software-properties \
+			 git \
+			 build-essential
+       
+COPY install_nvm.sh .
+
+### TODO: Isn't this all ugly, How to cleanup ? 
+RUN export PATH=$PATH:/root/.nvm/versions/node/v8.9.4/bin \
+	  && ./install_nvm.sh \
+    && mkdir -p /root/go/src/github.com/hyperledger \
+    && cd /root/go/src/github.com/hyperledger \
+    && git clone https://github.com/hyperledger/fabric-test \
+		&& cd fabric-test \
+ 		&& git submodule update --init --recursive \
+    && git submodule foreach git pull origin master \
+		&& cd fabric-sdk-node \
+		&& npm install \
+		&& npm install -g gulp \
+		&& gulp ca \
+		&& cp -r ../tools/PTE test/
+
+ENV GOPATH /root/go
+
+#COPY docker-entrypoint.sh /
+#ENTRYPOINT ["/docker-entrypoint.sh"]

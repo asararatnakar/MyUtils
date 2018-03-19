@@ -1,0 +1,38 @@
+#Pull base image.
+FROM ubuntu:16.04
+ENV GOPATH /root/go
+RUN apt update && apt install -y \
+        git \
+        curl \
+	iputils-ping \
+	telnetd \
+        python-software-properties \
+        git \
+        build-essential
+COPY install_nvm.sh .
+COPY channelTx /root/channelTx
+
+RUN mkdir -p /home/ibmadmin/gopath/src/github.com/hyperledger/fabric-test/fabric/common/tools/cryptogen/crypto-config/ordererOrganizations/
+
+# should we create and mount the channel config tx files ?
+RUN export PATH=$PATH:/root/.nvm/versions/node/v8.9.4/bin \
+    && ./install_nvm.sh \
+    && cd /root/channelTx && npm install superagent && node createChannelTx.js \
+    && cp *.tx /home/ibmadmin/gopath/src/github.com/hyperledger/fabric-test/fabric/common/tools/cryptogen/crypto-config/ordererOrganizations/ \
+    && mkdir -p $GOPATH/src/github.com/hyperledger \
+    && cd $GOPATH/src/github.com/hyperledger \
+    && git clone https://github.com/hyperledger/fabric-test \
+    && cd fabric-test \
+    && git submodule update --init --recursive \
+    && git submodule foreach git pull origin master \
+    && cd fabric-sdk-node \
+    && npm install \
+    && npm install -g gulp \
+    && gulp ca \
+    && cp -r ../tools/PTE test/ \
+    && sed -i "s/ -n / /g" test/PTE/CITest/scenarios/*.sh
+
+WORKDIR $GOPATH/src/github.com/hyperledger/fabric-test/fabric-sdk-node/test/PTE/CITest/scenarios
+
+#COPY docker-entrypoint.sh /
+#ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: may21ibp25
+  labels:
+    app: postgres
+data:
+  POSTGRESQL_DATABASE: postgresdb
+  POSTGRESQL_USER: admin
+  POSTGRESQL_PASSWORD: adminpw
+  PGDATA: /var/lib/postgresql/data/pgdata
